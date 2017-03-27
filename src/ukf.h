@@ -104,6 +104,11 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+  /**
+    * Produces sigma points for current timestep
+    */
+  void GenerateSigmaPoints(double delta_t);
 };
 
 #endif /* UKF_H */
