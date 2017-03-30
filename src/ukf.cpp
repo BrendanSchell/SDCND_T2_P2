@@ -62,7 +62,7 @@ UKF::UKF() {
   //define spreading parameter
   lambda_ = 3 - n_aug_;
   weights_ = VectorXd(2 * n_aug_ + 1);
-  weights_ << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+  weights_ << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
   Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
   
 }
@@ -286,8 +286,8 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 
     //laser measurement covariance matrix
     MatrixXd R = MatrixXd(n_z,n_z);
-    R << std_laspx_ * std_laspx_, 0.,
-         0., std_laspy_ * std_laspy_;
+    R << std_laspx_ * std_laspx_, 0.0,
+         0.0, std_laspy_ * std_laspy_;
 
     S = S + R;
     //create matrix for cross correlation Tc
@@ -309,7 +309,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     MatrixXd K = Tc * S.inverse();
 
     //residual
-    VectorXd z = VectorXd(3);
+    VectorXd z = VectorXd(2);
     z << meas_package.raw_measurements_[0],
         meas_package.raw_measurements_[1];
     VectorXd z_diff = z - z_pred;
