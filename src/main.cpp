@@ -8,6 +8,7 @@
 #include "ground_truth_package.h"
 #include "measurement_package.h"
 #include "tools.h"
+
 using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -36,6 +37,7 @@ void check_arguments(int argc, char* argv[]) {
   }
 }
 
+// check files can be opened
 void check_files(ifstream& in_file, string& in_name,
                  ofstream& out_file, string& out_name) {
   if (!in_file.is_open()) {
@@ -79,6 +81,7 @@ int main(int argc, char* argv[]) {
     istringstream iss(line);
     long long timestamp;
     bool skip = 0;
+
     // reads first element from the current line
     iss >> sensor_type;
 
@@ -95,6 +98,7 @@ int main(int argc, char* argv[]) {
       meas_package.raw_measurements_ << px, py;
       iss >> timestamp;
       meas_package.timestamp_ = timestamp;
+
       // if x or y values are set to 0, skip this step
       if (fabs(px*px + py*py) < 0.001){
         skip = 1;
