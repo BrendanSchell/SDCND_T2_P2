@@ -1,11 +1,15 @@
 #include <iostream>
 #include "ukf.h"
-
+#include "tools.h"
+#include "Eigen/Dense"
 /**
  * Initializes Unscented Kalman filter
  */
 
 using namespace std;
+using Eigen::MatrixXd;
+using Eigen::VectorXd;
+using std::vector;
 UKF::UKF() {
   // if this is false, laser measurements will be ignored (except during init)
   use_laser_ = true;
@@ -18,16 +22,16 @@ UKF::UKF() {
   x_ << 0, 0, 0, 0, 0;
   // initial covariance matrix
   P_ = MatrixXd(5, 5);
-  P_ << 1000, 0, 0, 0, 0,
-        0, 1000, 0, 0, 0,
-        0, 0, 1000, 0, 0,
-        0, 0, 0, 1000, 0,
-        0, 0, 0, 0, 1000;
+  P_ << 1, 0, 0, 0, 0,
+        0, 1, 0, 0, 0,
+        0, 0, 1, 0, 0,
+        0, 0, 0, 1, 0,
+        0, 0, 0, 0, 1;
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 30;
+  std_a_ = 0.8;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 30;
+  std_yawdd_ = 0.6;
 
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
@@ -318,6 +322,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     //update state mean and covariance matrix
     x_ = x_ + K * z_diff;
     P_ = P_ - K*S*K.transpose();
+    NIS_laser_ = z_diff.transpose() * S.inverse() * z_diff;
 
 }
 
@@ -426,4 +431,5 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   //update state mean and covariance matrix
   x_ = x_ + K * z_diff;
   P_ = P_ - K*S*K.transpose();
+  NIS_radar_ = z_diff.transpose() * S.inverse() * z_diff;
 }
